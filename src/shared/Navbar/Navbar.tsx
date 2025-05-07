@@ -10,12 +10,8 @@ function Navbar() {
     <nav className="navbar">
       <span>CV Manager</span>
 
-      <button onClick={() => i18n.changeLanguage('pl')}>
-        Polish
-      </button>
-      <button onClick={() => i18n.changeLanguage('en')}>
-        English
-      </button>
+      <button onClick={() => i18n.changeLanguage('pl')}>Polish</button>
+      <button onClick={() => i18n.changeLanguage('en')}>English</button>
 
       <button className="btn create-new-cv-button" onClick={() => navigate('/creator')}>
         Create new CV
