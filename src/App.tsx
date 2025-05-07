@@ -8,34 +8,28 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 const CVCreatorPage = lazy(() => import('./pages/CVCreatorPage/CVCreatorPage'));
 
 function App() {
-
   return (
     <>
       <Router>
         <Navbar />
 
         <Routes>
-
-          <Route path='/' element={<WelcomePage />}>
-          </Route>
-
-
-          <Route path='/creator' element={
-            <Suspense fallback={<Loading />}>
-              <CVCreatorPage />
-            </Suspense>
-          }>
-          </Route>
+          <Route path="/" element={<WelcomePage />}></Route>
 
           <Route
-            path="*"
-            element={<Navigate to="/" />}
-          />
+            path="/creator"
+            element={
+              <Suspense fallback={<Loading />}>
+                <CVCreatorPage />
+              </Suspense>
+            }
+          ></Route>
 
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
     </>
-  )
+  );
 }
 
 export default App;

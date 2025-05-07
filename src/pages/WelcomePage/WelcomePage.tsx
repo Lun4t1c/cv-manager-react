@@ -1,9 +1,5 @@
 function WelcomePage() {
-    return (
-        <>
-            Welcome
-        </>
-    )
+  return <>Welcome</>;
 }
 
 export default WelcomePage;
