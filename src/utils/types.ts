@@ -25,6 +25,7 @@ export interface WorkExperienceModel {
 
 export interface EducationModel {
   schoolName: string;
+  degree: string;
   start: Date;
   end: Date | undefined;
 }

@@ -2,33 +2,98 @@ import { useState, type CSSProperties } from 'react';
 import './CVCreatorPage.css';
 import './SplitPane.css';
 import { SplitPane } from '@rexxars/react-split-pane';
-import { createCvModelInstance } from '../../utils/helpers';
-import type { SkillModel } from '../../utils/types';
+import type { CVModel, EducationModel, SkillModel, WorkExperienceModel } from '../../utils/types';
 
 function CVCreatorPage() {
-  const [cv, setCv] = useState(createCvModelInstance());
+  const [personalInfo, setPersonalInfo] = useState<
+    Pick<CVModel, 'name' | 'surname' | 'email' | 'phoneNumber'>
+  >({
+    name: '',
+    surname: '',
+    phoneNumber: '',
+    email: ''
+  });
 
-  const updateCv = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const [skills, setSkills] = useState<SkillModel[]>([]);
+  const [workExperiences, setWorkExperiences] = useState<WorkExperienceModel[]>([]);
+  const [educations, setEducations] = useState<EducationModel[]>([]);
+
+  const updatePersonalInfo = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    setCv((prev) => ({
+    setPersonalInfo((prev) => ({
       ...prev,
       [name]: value
     }));
   };
 
-  const addSkill = () => {
-    const newCv = { ...cv };
-    newCv.skills.push({
-      name: '',
-      level: ''
-    });
-    setCv({ ...newCv });
+  const updateSkill = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    if (name.includes('skillName')) {
+      skills[parseInt(name.replace('skillName', ''))].name = value;
+      setSkills([...skills]);
+    } else if (name.includes('skillLevel')) {
+      skills[parseInt(name.replace('skillLevel', ''))].level = value;
+      setSkills([...skills]);
+    } else {
+      console.warn(`Inproper key in skill input: ${name}`);
+    }
   };
 
-  const updateSkill = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updateEducation = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    cv.skills[parseInt(name)].name = value;
-    setCv({ ...cv });
+    if (name.includes('educationName')) {
+      educations[parseInt(name.replace('educationName', ''))].schoolName = value;
+      setEducations([...educations]);
+    } else {
+      console.warn(`Inproper key in skill input: ${name}`);
+    }
+  };
+
+  const updateWorkExperience = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    if (name.includes('workExperienceCompany')) {
+      workExperiences[parseInt(name.replace('workExperienceCompany', ''))].company = value;
+      setWorkExperiences([...workExperiences]);
+    } else {
+      console.warn(`Inproper key in skill input: ${name}`);
+    }
+  };
+
+  const addCvEntry = (entryType: 'Skill' | 'WorkExperience' | 'Education'): void => {
+    switch (entryType) {
+      case 'Skill':
+        setSkills([
+          ...skills,
+          {
+            name: '',
+            level: 1
+          }
+        ]);
+        return;
+
+      case 'WorkExperience':
+        setWorkExperiences([
+          ...workExperiences,
+          {
+            jobTitle: '',
+            company: '',
+            start: new Date(),
+            end: undefined
+          }
+        ]);
+        return;
+
+      case 'Education':
+        setEducations([
+          ...educations,
+          {
+            schoolName: '',
+            start: new Date(),
+            end: undefined
+          }
+        ]);
+        return;
+    }
   };
 
   //https://www.npmjs.com/package/@rexxars/react-split-pane
@@ -46,8 +111,8 @@ function CVCreatorPage() {
               id="email"
               name="email"
               placeholder="E-mail address"
-              value={cv.email}
-              onChange={updateCv}
+              value={personalInfo.email}
+              onChange={updatePersonalInfo}
             />
           </div>
 
@@ -58,8 +123,8 @@ function CVCreatorPage() {
               name="phoneNumber"
               placeholder="Phone number"
               pattern="[0-9\-]+"
-              value={cv.phoneNumber}
-              onChange={updateCv}
+              value={personalInfo.phoneNumber}
+              onChange={updatePersonalInfo}
             />
           </div>
 
@@ -67,27 +132,92 @@ function CVCreatorPage() {
             <input type="url" id="url" name="url" placeholder="LinkedIn profile" />
           </div>
 
-          {cv.skills.map((skill: SkillModel, i: number) => {
+          {skills.map((skill: SkillModel, i: number) => {
             return (
-              <div key={i}>
+              <div key={i} className="cv-entry-input">
                 <input
-                  name={i.toString()}
+                  name={'skillName' + i.toString()}
                   type="text"
                   placeholder="skill name"
+                  value={skill.name}
+                  onChange={updateSkill}
+                />
+                <input
+                  name={'skillLevel' + i.toString()}
+                  type="text"
+                  placeholder="skill level"
+                  value={skill.level}
                   onChange={updateSkill}
                 />
               </div>
             );
           })}
-          <button onClick={addSkill}>Add skill</button>
+          <button onClick={() => addCvEntry('Skill')}>Add skill</button>
+
+          {educations.map((education: EducationModel, i: number) => {
+            return (
+              <div key={i}>
+                <input
+                  name={'educationName' + i.toString()}
+                  type="text"
+                  placeholder="college name"
+                  value={education.schoolName}
+                  onChange={updateEducation}
+                />
+              </div>
+            );
+          })}
+          <button onClick={() => addCvEntry('Education')}>Add education</button>
+
+          {workExperiences.map((workExperience: WorkExperienceModel, i: number) => {
+            return (
+              <div key={i}>
+                <input
+                  name={'workExperienceCompany' + i.toString()}
+                  type="text"
+                  placeholder="Company"
+                  value={workExperience.company}
+                  onChange={updateWorkExperience}
+                />
+              </div>
+            );
+          })}
+          <button onClick={() => addCvEntry('WorkExperience')}>Add work experience</button>
         </form>
 
         <div className="preview-container">
-          <div> {cv.email} </div>
-          <div> {cv.phoneNumber} </div>
+          <div> {personalInfo.email} </div>
+          <div> {personalInfo.phoneNumber} </div>
 
-          {cv.skills.map((skill: SkillModel) => {
-            return <div>skill: {skill.name}</div>;
+          {skills.map((skill: SkillModel) => {
+            return (
+              <>
+                <div>
+                  <span>skill: {skill.name},</span>
+                  <span>level: {skill.level}</span>
+                </div>
+              </>
+            );
+          })}
+
+          {educations.map((education: EducationModel) => {
+            return (
+              <>
+                <div>
+                  <span>College: {education.schoolName},</span>
+                </div>
+              </>
+            );
+          })}
+
+          {workExperiences.map((workExperience: WorkExperienceModel) => {
+            return (
+              <>
+                <div>
+                  <span>Company: {workExperience.company},</span>
+                </div>
+              </>
+            );
           })}
         </div>
       </SplitPane>
