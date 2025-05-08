@@ -45,7 +45,7 @@ function CVCreatorPage() {
       educations[parseInt(name.replace('educationName', ''))].schoolName = value;
       setEducations([...educations]);
     } else {
-      console.warn(`Inproper key in skill input: ${name}`);
+      console.warn(`Inproper key in education input: ${name}`);
     }
   };
 
@@ -55,7 +55,7 @@ function CVCreatorPage() {
       workExperiences[parseInt(name.replace('workExperienceCompany', ''))].company = value;
       setWorkExperiences([...workExperiences]);
     } else {
-      console.warn(`Inproper key in skill input: ${name}`);
+      console.warn(`Inproper key in work experience input: ${name}`);
     }
   };
 
@@ -88,8 +88,9 @@ function CVCreatorPage() {
           ...educations,
           {
             schoolName: '',
+            degree: '',
             start: new Date(),
-            end: undefined
+            end: undefined,
           }
         ]);
         return;
