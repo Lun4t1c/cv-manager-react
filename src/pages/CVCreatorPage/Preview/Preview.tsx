@@ -1,33 +1,36 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "../cvStore";
-import React from "react";
 import { Page, Document, PDFViewer } from "@react-pdf/renderer";
 import './Preview.css';
-//import Html from "react-pdf-html";
+import Html from "react-pdf-html";
+import type { CVModel } from "../../../utils/types";
+
+const getHtmlFromCv = (cv: CVModel) => {
+    const personal = `
+    <div>Email: ${cv.personalInfo.email}</div>
+    <div>Phone: ${cv.personalInfo.phoneNumber}</div>
+  `;
+
+    const skills = cv.skills.map(
+        (s) => `<div>${s.name} - ${s.level}</div>`
+    ).join('');
+
+    return `<div>${personal}${skills}</div>`;
+};
 
 function Preview() {
     const cv = useSelector((state: RootState) => state.cv);
 
-    return (<>
-            <PDFViewer showToolbar={false} className="preview-container">
-                <Document >
-                    <Page size="A4">
-                        {/* <Html>
-                    <div className="preview-container">
-            <div> {cv.personalInfo.email} </div>
-            <div> {cv.personalInfo.phoneNumber} </div>
+    const html = getHtmlFromCv(cv);
 
-            {cv.skills.map((skill, i) => {
-            return <React.Fragment key={i}>
-                <div>{skill.name} - {skill.level}</div>
-            </React.Fragment>
-        }
-        )}
-        </div>
-                </Html> */}
-                    </Page>
-                </Document>
-            </PDFViewer>
+    return (<>
+        <PDFViewer showToolbar={false} className="preview-container">
+            <Document >
+                <Page size="A4">
+                    <Html>{html}</Html>
+                </Page>
+            </Document>
+        </PDFViewer>
 
     </>);
 }
