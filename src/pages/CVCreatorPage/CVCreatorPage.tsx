@@ -3,19 +3,18 @@ import './CVCreatorPage.css';
 import './SplitPane.css';
 import { SplitPane } from '@rexxars/react-split-pane';
 import type {
-  CVModel,
   EducationModel,
   LinkModel,
+  PersonalInfoModel,
   SkillModel,
   WorkExperienceModel
 } from '../../utils/types';
 
 function CVCreatorPage() {
-  const [personalInfo, setPersonalInfo] = useState<
-    Pick<CVModel, 'name' | 'surname' | 'email' | 'phoneNumber'>
-  >({
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfoModel>({
     name: '',
     surname: '',
+    location: '',
     phoneNumber: '',
     email: ''
   });

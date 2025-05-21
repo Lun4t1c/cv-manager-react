@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +8,7 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <span>CV Manager</span>
+      <Link to={'/'}>CV Manager</Link>
 
       <button onClick={() => i18n.changeLanguage('pl')}>Polish</button>
       <button onClick={() => i18n.changeLanguage('en')}>English</button>

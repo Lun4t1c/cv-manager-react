@@ -1,15 +1,20 @@
 export type IntRange1To10 = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export interface CVModel {
-  name: string;
-  surname: string;
-  email: string;
-  phoneNumber: string;
+  personalInfo: PersonalInfoModel;
 
   links: LinkModel[];
   skills: SkillModel[];
   workExperiences: WorkExperienceModel[];
   educations: EducationModel[];
+}
+
+export interface PersonalInfoModel {
+  name: string;
+  surname: string;
+  location: string;
+  email: string;
+  phoneNumber: string;
 }
 
 export interface SkillModel {
