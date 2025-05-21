@@ -6,6 +6,7 @@ export interface CVModel {
   email: string;
   phoneNumber: string;
 
+  links: LinkModel[];
   skills: SkillModel[];
   workExperiences: WorkExperienceModel[];
   educations: EducationModel[];
@@ -28,4 +29,9 @@ export interface EducationModel {
   degree: string;
   start: Date;
   end: Date | undefined;
+}
+
+export interface LinkModel {
+  url: string;
+  icon: string;
 }

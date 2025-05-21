@@ -2,7 +2,13 @@ import { useState, type CSSProperties } from 'react';
 import './CVCreatorPage.css';
 import './SplitPane.css';
 import { SplitPane } from '@rexxars/react-split-pane';
-import type { CVModel, EducationModel, SkillModel, WorkExperienceModel } from '../../utils/types';
+import type {
+  CVModel,
+  EducationModel,
+  LinkModel,
+  SkillModel,
+  WorkExperienceModel
+} from '../../utils/types';
 
 function CVCreatorPage() {
   const [personalInfo, setPersonalInfo] = useState<
@@ -17,6 +23,7 @@ function CVCreatorPage() {
   const [skills, setSkills] = useState<SkillModel[]>([]);
   const [workExperiences, setWorkExperiences] = useState<WorkExperienceModel[]>([]);
   const [educations, setEducations] = useState<EducationModel[]>([]);
+  const [links, setLinks] = useState<LinkModel[]>([]);
 
   const updatePersonalInfo = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -59,7 +66,20 @@ function CVCreatorPage() {
     }
   };
 
-  const addCvEntry = (entryType: 'Skill' | 'WorkExperience' | 'Education'): void => {
+  const updateLink = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    if (name.includes('linkUrl')) {
+      links[parseInt(name.replace('linkUrl', ''))].url = value;
+      setLinks([...links]);
+    } else if (name.includes('linkIcon')) {
+      links[parseInt(name.replace('linkIcon', ''))].icon = value;
+      setLinks([...links]);
+    } else {
+      console.warn(`Inproper key in link input: ${name}`);
+    }
+  };
+
+  const addCvEntry = (entryType: 'Skill' | 'WorkExperience' | 'Education' | 'Link'): void => {
     switch (entryType) {
       case 'Skill':
         setSkills([
@@ -90,10 +110,20 @@ function CVCreatorPage() {
             schoolName: '',
             degree: '',
             start: new Date(),
-            end: undefined,
+            end: undefined
           }
         ]);
         return;
+
+      case 'Link':
+        setLinks([
+          ...links,
+          {
+            url: '',
+            icon: ''
+          }
+        ]);
+        break;
     }
   };
 
@@ -129,61 +159,99 @@ function CVCreatorPage() {
             />
           </div>
 
-          <div className="form-group">
-            <input type="url" id="url" name="url" placeholder="LinkedIn profile" />
+          <div className="form-group-container">
+            {links.length > 0 && <div className="separator"></div>}
+            {links.map((link: LinkModel, i: number) => {
+              return (
+                <div key={i} className="cv-link-input">
+                  <input
+                    name={'linkUrl' + i.toString()}
+                    type="text"
+                    placeholder="link"
+                    value={link.url}
+                    onChange={updateLink}
+                  />
+                  <input
+                    name={'linkIcon' + i.toString()}
+                    type="text"
+                    placeholder="link icon"
+                    value={link.icon}
+                    onChange={updateLink}
+                  />
+                </div>
+              );
+            })}
+            <button type="button" onClick={() => addCvEntry('Link')}>
+              Add link
+            </button>
           </div>
 
-          {skills.map((skill: SkillModel, i: number) => {
-            return (
-              <div key={i} className="cv-entry-input">
-                <input
-                  name={'skillName' + i.toString()}
-                  type="text"
-                  placeholder="skill name"
-                  value={skill.name}
-                  onChange={updateSkill}
-                />
-                <input
-                  name={'skillLevel' + i.toString()}
-                  type="text"
-                  placeholder="skill level"
-                  value={skill.level}
-                  onChange={updateSkill}
-                />
-              </div>
-            );
-          })}
-          <button onClick={() => addCvEntry('Skill')}>Add skill</button>
+          <div className="form-group-container">
+            {skills.length > 0 && <div className="separator"></div>}
+            {skills.map((skill: SkillModel, i: number) => {
+              return (
+                <div key={i} className="cv-entry-input">
+                  <input
+                    name={'skillName' + i.toString()}
+                    type="text"
+                    placeholder="skill name"
+                    value={skill.name}
+                    onChange={updateSkill}
+                  />
+                  <input
+                    name={'skillLevel' + i.toString()}
+                    type="text"
+                    placeholder="skill level"
+                    value={skill.level}
+                    onChange={updateSkill}
+                  />
+                </div>
+              );
+            })}
+            <button type="button" onClick={() => addCvEntry('Skill')}>
+              Add skill
+            </button>
+          </div>
 
-          {educations.map((education: EducationModel, i: number) => {
-            return (
-              <div key={i}>
-                <input
-                  name={'educationName' + i.toString()}
-                  type="text"
-                  placeholder="college name"
-                  value={education.schoolName}
-                  onChange={updateEducation}
-                />
-              </div>
-            );
-          })}
-          <button onClick={() => addCvEntry('Education')}>Add education</button>
+          <div className="form-group-container">
+            {educations.length > 0 && <div className="separator"></div>}
+            {educations.map((education: EducationModel, i: number) => {
+              return (
+                <div key={i}>
+                  <input
+                    name={'educationName' + i.toString()}
+                    type="text"
+                    placeholder="college name"
+                    value={education.schoolName}
+                    onChange={updateEducation}
+                  />
+                </div>
+              );
+            })}
+            <button type="button" onClick={() => addCvEntry('Education')}>
+              Add education
+            </button>
+          </div>
 
-          {workExperiences.map((workExperience: WorkExperienceModel, i: number) => {
-            return (
-              <div key={i}>
-                <input
-                  name={'workExperienceCompany' + i.toString()}
-                  type="text"
-                  placeholder="Company"
-                  value={workExperience.company}
-                  onChange={updateWorkExperience}
-                />
-              </div>
-            );
-          })}
-          <button onClick={() => addCvEntry('WorkExperience')}>Add work experience</button>
+          <div className="form-group-container">
+            {workExperiences.length > 0 && <div className="separator"></div>}
+            {workExperiences.map((workExperience: WorkExperienceModel, i: number) => {
+              return (
+                <div key={i}>
+                  <input
+                    name={'workExperienceCompany' + i.toString()}
+                    type="text"
+                    placeholder="Company"
+                    value={workExperience.company}
+                    onChange={updateWorkExperience}
+                  />
+                </div>
+              );
+            })}
+            <button type="button" onClick={() => addCvEntry('WorkExperience')}>
+              Add work experience
+            </button>
+          </div>
         </form>
 
         <div className="preview-container">
