@@ -1,12 +1,19 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "../cvStore";
 import React from "react";
+import { Page, Document, PDFViewer } from "@react-pdf/renderer";
+import './Preview.css';
+//import Html from "react-pdf-html";
 
 function Preview() {
     const cv = useSelector((state: RootState) => state.cv);
 
     return (<>
-        <div className="preview-container">
+            <PDFViewer showToolbar={false} className="preview-container">
+                <Document >
+                    <Page size="A4">
+                        {/* <Html>
+                    <div className="preview-container">
             <div> {cv.personalInfo.email} </div>
             <div> {cv.personalInfo.phoneNumber} </div>
 
@@ -17,6 +24,11 @@ function Preview() {
         }
         )}
         </div>
+                </Html> */}
+                    </Page>
+                </Document>
+            </PDFViewer>
+
     </>);
 }
 

@@ -27,14 +27,6 @@ input:focus {
   background-color: yellow;
 }
 
-.preview-container {
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-
-  background-color: red;
-}
-
 .form-group-container {
   margin-bottom: 0.5rem;
 }
